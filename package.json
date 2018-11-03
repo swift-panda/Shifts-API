@@ -1,0 +1,21 @@
+{
+  "name": "shifts-api",
+  "version": "1.0.0",
+  "description": "Shifts API",
+  "main": "index.js",
+  "repository": "git@github.com:swift-panda/Shifts-API.git",
+  "author": "Connor O'Brien <cobrien.js@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
+    "mocha": "^5.2.0"
+  },
+  "dependencies": {
+    "knex": "^0.15.2",
+    "koa": "^2.6.1",
+    "koa-router": "^7.4.0",
+    "pg": "^7.6.0"
+  }
+}
