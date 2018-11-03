@@ -21,7 +21,7 @@ module.exports = {
       tableName: 'knex_migrations'
     },
     seeds: {
-      directory: path.join(BASE_PATH, 'migrations')
+      directory: path.join(BASE_PATH, 'seeds')
     }
   },
 
@@ -41,7 +41,7 @@ module.exports = {
       tableName: 'knex_migrations'
     },
     seeds: {
-      directory: path.join(BASE_PATH, 'migrations')
+      directory: path.join(BASE_PATH, 'seeds')
     }
   }
 
