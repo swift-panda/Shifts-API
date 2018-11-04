@@ -1,22 +1,26 @@
-const knex = require('knex');
+const knex = require('../connection.js');
+const shifts = knex('shifts');
 
-const getShift = shiftId => {
-  return knex
-    .select('*')
-    .from('shifts')
-    .where({ id: shiftId });
-};
+const listShifts = () => shifts.select('*');
 
-const listShifts = () => {
-  return knex
-    .select('*')
-    .from('shifts');
-};
+const getShift = shiftId => shifts
+  .select('*')
+  .where({ id: shiftId });
+
+const createShift = shift => shift.insert(shift);
+
+const updateShift = (shiftId, shift) => shifts
+  .where('id', shiftId)
+  .update(shift);
+
+const deleteUser = shiftId => shifts
+  .where('id', shiftId)
+  .del();
 
 module.exports = {
-  getShift,
   listShifts,
-  // createShift,
-  // updateShift,
-  // deleteShift,
+  getShift,
+  createShift,
+  updateShift,
+  deleteShift,
 };
