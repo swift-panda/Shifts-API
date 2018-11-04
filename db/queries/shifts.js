@@ -13,7 +13,7 @@ const updateShift = (shiftId, shift) => shifts
   .where('id', shiftId)
   .update(shift);
 
-const deleteUser = shiftId => shifts
+const deleteShift = shiftId => shifts
   .where('id', shiftId)
   .del();
 
