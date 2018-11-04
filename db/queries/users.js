@@ -1,19 +1,18 @@
 const knex = require('../connection.js');
-const users = knex('users');
 
-const listUsers = () => users.select('*');
+const listUsers = () => knex('users').select('*');
 
-const getUser = userId => users
+const getUser = userId => knex('users')
   .select('*')
   .where({ id: userId });
 
-const createUser = user => users.insert(user);
+const createUser = user => knex('users').insert(user);
 
-const updateUser = (userId, user) => users
+const updateUser = (userId, user) => knex('users')
   .where('id', userId)
   .update(user);
 
-const deleteUser = userId => users
+const deleteUser = userId => knex('users')
   .where('id', userId)
   .del();
 

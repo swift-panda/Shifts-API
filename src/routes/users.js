@@ -10,6 +10,7 @@ const {
   updateUser,
   deleteUser
 } = require('../../db/queries/users.js');
+const { listShifts } = require('../../db/queries/shifts.js');
 
 router.get('/', async (ctx, next) => {
   try {
@@ -24,6 +25,16 @@ router.get('/:id', async (ctx, next) => {
   try {
     const user = await getUser(ctx.params.id);
     ctx.body = user;
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+router.get('/:id/shifts', async (ctx, next) => {
+  try {
+    const { start, end } = ctx.request.query;
+    const shifts = await listShifts({ userId: ctx.params.id, start, end });
+    ctx.body = shifts;
   } catch (err) {
     console.error(err);
   }

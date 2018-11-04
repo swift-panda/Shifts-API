@@ -13,7 +13,8 @@ const {
 
 router.get('/', async (ctx, next) => {
   try {
-    const shifts = await listShifts();
+    const { start, end } = ctx.request.query;
+    const shifts = await listShifts({ start, end });
     ctx.body = shifts;
   } catch (err) {
     console.error(err);

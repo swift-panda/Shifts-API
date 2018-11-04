@@ -1,19 +1,24 @@
 const knex = require('../connection.js');
-const shifts = knex('shifts');
 
-const listShifts = () => shifts.select('*');
+const listShifts = ({ userId, start, end }) => {
+  const list = knex('shifts').select('*');
+  if (userId) list.andWhere('user_id', userId);
+  if (start) list.andWhere('start', '>=', start);
+  if (end) list.andWhere('end', '<=', end);
+  return list;
+}
 
-const getShift = shiftId => shifts
+const getShift = shiftId => knex('shifts')
   .select('*')
   .where({ id: shiftId });
 
-const createShift = shift => shift.insert(shift);
+const createShift = shift => knex('shifts').insert(shift);
 
-const updateShift = (shiftId, shift) => shifts
+const updateShift = (shiftId, shift) => knex('shifts')
   .where('id', shiftId)
   .update(shift);
 
-const deleteShift = shiftId => shifts
+const deleteShift = shiftId => knex('shifts')
   .where('id', shiftId)
   .del();
 
