@@ -7,6 +7,11 @@
   "author": "Connor O'Brien <cobrien.js@gmail.com>",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "NODE_ENV=testing && mocha --recursive ./src/**/*.spec.js",
+    "test:watch": "npm run test -- --watch"
+  },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",

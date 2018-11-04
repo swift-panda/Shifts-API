@@ -38,31 +38,35 @@ exports.seed = (knex, Promise) => {
     })
     .then(() => {
       // Deletes ALL existing entries
-      const today = new Date();
-      const tomorrow = new Date(new Date().setDate(today.getDate() + 1));
       return knex('shifts').del()
         // Inserts seed entries
         .then(() => {
           return knex('shifts').insert([
             {
               id: 1,
-              start: today,
-              end: tomorrow,
+              start: addDays(0),
+              end: addDays(1),
               user_id: 1,
             },
             {
               id: 2,
-              start: today,
-              end: tomorrow,
+              start: addDays(2),
+              end: addDays(3),
               user_id: 2,
             },
             {
               id: 3,
-              start: today,
-              end: tomorrow,
+              start: addDays(4),
+              end: addDays(5),
               user_id: 3,
             },
           ]);
         });
     });
 };
+
+const addDays = num => {
+  const today = new Date();
+  return new Date(new Date().setDate(today.getDate() + num));
+}
+
