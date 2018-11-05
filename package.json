@@ -9,8 +9,14 @@
   "private": false,
   "scripts": {
     "start": "node src/index.js",
-    "test": "NODE_ENV=testing && mocha --recursive ./src/**/*.spec.js",
-    "test:watch": "npm run test -- --watch"
+    "test": "NODE_ENV=testing mocha --recursive ./src/**/*.spec.js",
+    "test:watch": "npm run test -- --watch",
+    "migrate": "knex migrate:latest --env production",
+    "migrate:dev": "knex migrate:latest --env development",
+    "migrate:test": "knex migrate:latest --env testing",
+    "seed": "knex seed:run --env production",
+    "seed:dev": "knex seed:run --env development",
+    "seed:test": "knex seed:run --env testing"
   },
   "devDependencies": {
     "chai": "^4.2.0",

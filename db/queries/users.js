@@ -4,7 +4,8 @@ const listUsers = () => knex('users').select('*');
 
 const getUser = userId => knex('users')
   .select('*')
-  .where({ id: userId });
+  .where({ id: userId })
+  .first();
 
 const createUser = user => knex('users').insert(user);
 

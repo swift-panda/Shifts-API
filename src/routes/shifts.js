@@ -17,16 +17,18 @@ router.get('/', async (ctx, next) => {
     const shifts = await listShifts({ start, end });
     ctx.body = shifts;
   } catch (err) {
-    console.error(err);
+    // console.error(err);
   }
 });
 
 router.get('/:id', async (ctx, next) => {
   try {
     const shift = await getShift(ctx.params.id);
+    if (!shift) throw new Error(`Shift ${ctx.params.id} not found`);
     ctx.body = shift;
   } catch (err) {
-    console.error(err);
+    ctx.status = 404;
+    ctx.body = { message: err.toString() };
   }
 });
 

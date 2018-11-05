@@ -8,7 +8,7 @@ const knex = require('../../db/connection.js');
 describe('/shifts', () => {
   let api;
   beforeEach(async () => {
-    api = chai.request('http://localhost:3000').keepOpen();
+    api = chai.request('http://localhost:3000/api/shifts').keepOpen();
     await knex.migrate.rollback();
     await knex.migrate.latest();
     await knex.seed.run();
@@ -16,29 +16,42 @@ describe('/shifts', () => {
 
   describe('GET /', () => {
     it('should list all shifts', async () => {
-      const shifts = await api.get('/');
+      const { body: shifts } = await api.get('');
       expect(shifts.length).to.be.equal(3);
     });
 
-    it('should filter by start date', () => {
+    it('should filter by start date', async () => {
+      const now = new Date().toISOString();
+      const { body: shifts } = await api.get(`?start=${now}`);
+      expect(shifts.length).to.be.equal(2);
     });
 
-    it('should filter by end date', () => {
-    });
-
-    it('should fetch a single shift', () => {
+    it('should filter by end date', async () => {
+      const now = new Date();
+      const twoDays = new Date(new Date().setDate(now.getDate() + 2)).toISOString();
+      const { body: shifts } = await api.get(`?end=${twoDays}`);
+      expect(shifts.length).to.be.equal(1);
     });
   });
 
   describe('GET /:id', () => {
-    it('should get a single shift given id', () => {
+    it('should get a single shift given id', async () => {
+      const { body: shift } = await api.get('/1');
+      expect(shift.id).to.be.equal(1);
     });
 
-    it('should return 404 when given invalid id', () => {
+    it('should return 404 when given invalid id', async () => {
+      const { status } = await api.get('/4');
+      expect(status).to.be.equal(404);
     });
   });
 
   describe('POST /', () => {
+    it('should create a single shift', () => {
+    });
+
+    it('should not allow id to be set', () => {
+    });
   });
 
   describe('PUT /:id', () => {

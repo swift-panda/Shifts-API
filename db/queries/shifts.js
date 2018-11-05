@@ -10,7 +10,8 @@ const listShifts = ({ userId, start, end }) => {
 
 const getShift = shiftId => knex('shifts')
   .select('*')
-  .where({ id: shiftId });
+  .where({ id: shiftId })
+  .first();
 
 const createShift = shift => knex('shifts').insert(shift);
 
