@@ -9,7 +9,7 @@ const {
   createShift,
   updateShift,
   deleteShift,
-} = require('../../db/queries/shifts.js');
+} = require('../../../db/queries/shifts.js');
 
 router.get('/', async (ctx, next) => {
   try {

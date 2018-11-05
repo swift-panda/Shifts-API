@@ -9,8 +9,8 @@ const {
   createUser,
   updateUser,
   deleteUser
-} = require('../../db/queries/users.js');
-const { listShifts } = require('../../db/queries/shifts.js');
+} = require('../../../db/queries/users.js');
+const { listShifts } = require('../../../db/queries/shifts.js');
 
 router.get('/', async (ctx, next) => {
   try {

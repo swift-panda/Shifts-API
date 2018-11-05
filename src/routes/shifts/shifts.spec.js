@@ -76,6 +76,9 @@ describe('/shifts', () => {
 
     it('should not allow updated_at to be set', async () => {
     });
+
+    it('should not allow a shift to be created the overlaps with users shifts', async () => {
+    });
   });
 
   describe('PUT /:id', () => {
@@ -85,13 +88,13 @@ describe('/shifts', () => {
     it('should not allow an id to be changed', async () => {
     });
 
-    it('should not allow created_at to be set', async () => {
+    it('should not allow created_at to be updated', async () => {
     });
 
-    it('should not allow updated_at to be set', async () => {
+    it('should not allow updated_at to be manually updated', async () => {
     });
 
-    it('should not allow shifts to overflap for the same user', async () => {
+    it('should not allow shifts to overlap for the same user', async () => {
     });
   });
 

@@ -7,11 +7,14 @@ const getUser = userId => knex('users')
   .where({ id: userId })
   .first();
 
-const createUser = user => knex('users').insert(user);
+const createUser = user => knex('users')
+  .insert(user)
+  .returning('*');
 
 const updateUser = (userId, user) => knex('users')
   .where('id', userId)
-  .update(user);
+  .update(user)
+  .returning('*');
 
 const deleteUser = userId => knex('users')
   .where('id', userId)
