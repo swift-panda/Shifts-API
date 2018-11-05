@@ -1,9 +1,8 @@
-require('mocha');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { expect } = chai;
 chai.use(chaiHttp);
-const knex = require('../../db/connection.js');
+const knex = require('../../../db/connection.js');
 
 describe('/shifts', () => {
   let api;
