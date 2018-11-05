@@ -9,6 +9,7 @@
   "private": false,
   "scripts": {
     "start": "node src/index.js",
+    "start:test": "NODE_ENV=testing node src/index.js",
     "test": "NODE_ENV=testing mocha --recursive ./src/**/*.spec.js",
     "test:watch": "npm run test -- --watch",
     "migrate": "knex migrate:latest --env production",
@@ -26,6 +27,7 @@
   "dependencies": {
     "knex": "^0.15.2",
     "koa": "^2.6.1",
+    "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "pg": "^7.6.0"
   }

@@ -13,11 +13,14 @@ const getShift = shiftId => knex('shifts')
   .where({ id: shiftId })
   .first();
 
-const createShift = shift => knex('shifts').insert(shift);
+const createShift = shift => knex('shifts')
+  .insert(shift)
+  .returning('*');
 
 const updateShift = (shiftId, shift) => knex('shifts')
   .where('id', shiftId)
-  .update(shift);
+  .update(shift)
+  .returning('*');
 
 const deleteShift = shiftId => knex('shifts')
   .where('id', shiftId)

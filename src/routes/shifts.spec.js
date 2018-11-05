@@ -47,29 +47,63 @@ describe('/shifts', () => {
   });
 
   describe('POST /', () => {
-    it('should create a single shift', () => {
+    it('should create a single shift', async () => {
+      const now = new Date();
+      const { body: shift } = await api.post('').send({
+        user_id: 5,
+        start: now.toISOString(),
+        end: now.toISOString(),
+      });
+      const { body: shifts } = await api.get('');
+      expect(shifts.length).to.be.equal(4);
     });
 
-    it('should not allow id to be set', () => {
+    it('should not allow id to be set', async () => {
+      const now = new Date();
+      const { body: shift } = await api.post('').send({
+        id: 42,
+        user_id: 4,
+        start: now.toISOString(),
+        end: now.toISOString(),
+      });
+      expect(shift.id).to.not.equal(42);
+      const { body: shifts } = await api.get('');
+      expect(shifts.length).to.be.equal(4);
+    });
+
+    it('should not allow created_at to be set', async () => {
+    });
+
+    it('should not allow updated_at to be set', async () => {
     });
   });
 
   describe('PUT /:id', () => {
-    it('should update a single shift', () => {
+    it('should update a single shift', async () => {
     });
 
-    it('should not allow an id to be changed', () => {
+    it('should not allow an id to be changed', async () => {
     });
 
-    it('should not allow shifts to overflap for the same user', () => {
+    it('should not allow created_at to be set', async () => {
+    });
+
+    it('should not allow updated_at to be set', async () => {
+    });
+
+    it('should not allow shifts to overflap for the same user', async () => {
     });
   });
 
   describe('DELETE /:id', () => {
-    it('should delete a single shift and give success message', () => {
+    it('should delete a single shift and give success message', async () => {
+      const { status } = await api.delete('/1');
+      expect(status).to.be.equal(200);
+      const { body: shifts } = await api.get('');
+      expect(shifts.length).to.be.equal(2);
     });
 
-    it('should fail to find deleted shift', () => {
+    it('should return 404 when given invalid id', async () => {
     });
   });
 

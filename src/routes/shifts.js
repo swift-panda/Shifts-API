@@ -34,16 +34,16 @@ router.get('/:id', async (ctx, next) => {
 
 router.post('/', async (ctx, next) => {
   try {
-    const shift = await createShift(ctx.req);
+    const shift = await createShift(ctx.request.body);
     ctx.body = shift;
   } catch (err) {
-    console.error(err);
+    ctx.body = err
   }
 });
 
 router.put('/:id', async (ctx, next) => {
   try {
-    const user = await updateShift(ctx.params.id, ctx.req);
+    const shift = await updateShift(ctx.params.id, ctx.request.body);
     ctx.body = shift;
   } catch (err) {
     console.error(err);
@@ -52,10 +52,11 @@ router.put('/:id', async (ctx, next) => {
 
 router.delete('/:id', async (ctx, next) => {
   try {
-    deleteShift(ctx.params.id);
-    ctx.body = { message: `successfully deleted shift ${ctx.params.id}` };
+    await deleteShift(ctx.params.id);
+    ctx.body = { message: `Successfully deleted shift ${ctx.params.id}` };
   } catch (err) {
-    console.error(err);
+    ctx.status = 404
+    ctx.body = { message: `Error: Shift ${ctx.params.id} not found` };
   }
 });
 
