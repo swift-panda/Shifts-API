@@ -8,7 +8,8 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "node src/index.js",
+    "start": "NODE_ENV=development node src/index.js",
+    "start:prod": "NODE_ENV=production node src/index.js",
     "start:test": "NODE_ENV=testing node src/index.js",
     "test": "NODE_ENV=testing mocha --recursive ./src/**/*.spec.js",
     "test:watch": "npm run test -- --watch",

@@ -5,6 +5,7 @@ const router = new Router({
 
 const {
   listShifts,
+  findConflictingShifts,
   getShift,
   createShift,
   updateShift,
@@ -27,26 +28,34 @@ router.get('/:id', async (ctx, next) => {
     if (!shift) throw new Error(`Shift ${ctx.params.id} not found`);
     ctx.body = shift;
   } catch (err) {
-    ctx.status = 404;
+    ctx.status = 404; // Not found
     ctx.body = { message: err.toString() };
   }
 });
 
 router.post('/', async (ctx, next) => {
   try {
+    const { user_id, start, end } = ctx.request.body;
+    await validateShift(user_id, start, end);
     const shift = await createShift(ctx.request.body);
     ctx.body = shift;
   } catch (err) {
-    ctx.body = err
+    ctx.status = 400; // Bad data
+    ctx.body = { message: err.toString() };
   }
 });
 
-router.put('/:id', async (ctx, next) => {
+router.patch('/:id', async (ctx, next) => {
   try {
-    const shift = await updateShift(ctx.params.id, ctx.request.body);
+    const { start: originalStart, end: originalEnd } = fetchShift(ctx.params.id);
+    // extract start and end, only they can be updated
+    const { user_id, start, end } = ctx.request.body;
+    await validateShift(user_id, start || originalStart, end || originalEnd);
+    const shift = await updateShift(ctx.params.id, { start, end });
     ctx.body = shift;
   } catch (err) {
-    console.error(err);
+    ctx.status = 400; // Bad data
+    ctx.body = { message: err.toString() };
   }
 });
 
@@ -59,5 +68,20 @@ router.delete('/:id', async (ctx, next) => {
     ctx.body = { message: `Error: Shift ${ctx.params.id} not found` };
   }
 });
+
+const fetchShift = async id => {
+  const shift = await getShift(id);
+  if (!shift) throw new Error(`Shift ${id} not found`);
+  return shift;
+}
+
+// function that checks if there is an overlapping shift
+const validateShift = async (userId, start, end) => {
+  const shifts = await findConflictingShifts({ userId, start, end });
+  if (shifts.length > 0) {
+    const shiftIds = shifts.map(shift => shift.id).join(', ');
+    throw new Error(`Shift cannot be created, conflicts with the following ${shiftIds}`);
+  }
+};
 
 module.exports = router.routes();

@@ -49,7 +49,7 @@ router.post('/', async (ctx, next) => {
   }
 });
 
-router.put('/:id', async (ctx, next) => {
+router.patch('/:id', async (ctx, next) => {
   try {
     const user = await updateUser(ctx.params.id, ctx.req);
     ctx.body = user;

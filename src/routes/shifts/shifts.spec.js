@@ -20,16 +20,9 @@ describe('/shifts', () => {
     });
 
     it('should filter by start date', async () => {
-      const now = new Date().toISOString();
-      const { body: shifts } = await api.get(`?start=${now}`);
-      expect(shifts.length).to.be.equal(2);
     });
 
     it('should filter by end date', async () => {
-      const now = new Date();
-      const twoDays = new Date(new Date().setDate(now.getDate() + 2)).toISOString();
-      const { body: shifts } = await api.get(`?end=${twoDays}`);
-      expect(shifts.length).to.be.equal(1);
     });
   });
 
@@ -47,23 +40,21 @@ describe('/shifts', () => {
 
   describe('POST /', () => {
     it('should create a single shift', async () => {
-      const now = new Date();
       const { body: shift } = await api.post('').send({
         user_id: 5,
-        start: now.toISOString(),
-        end: now.toISOString(),
+        start: '2018-10-06T09:00:00+0000',
+        end: '2018-10-06T17:00:00+0000',
       });
       const { body: shifts } = await api.get('');
       expect(shifts.length).to.be.equal(4);
     });
 
     it('should not allow id to be set', async () => {
-      const now = new Date();
       const { body: shift } = await api.post('').send({
         id: 42,
-        user_id: 4,
-        start: now.toISOString(),
-        end: now.toISOString(),
+        user_id: 5,
+        start: '2018-10-06T09:00:00+0000',
+        end: '2018-10-06T17:00:00+0000',
       });
       expect(shift.id).to.not.equal(42);
       const { body: shifts } = await api.get('');
@@ -76,7 +67,72 @@ describe('/shifts', () => {
     it('should not allow updated_at to be set', async () => {
     });
 
-    it('should not allow a shift to be created the overlaps with users shifts', async () => {
+    describe('check shift bookends', () => {
+      it('should allow shift to be created with start at the end of previous shift', async () => {
+        await api.post('').send({
+          user_id: 1,
+          start: '2018-10-06T17:00:00+0000',
+          end: '2018-10-06T18:00:00+0000',
+        });
+        const { body: shifts } = await api.get('');
+        expect(shifts.length).to.be.equal(4);
+      });
+
+      it('should allow shift to be created with end at the start of next shift', async () => {
+        await api.post('').send({
+          user_id: 1,
+          start: '2018-10-06T08:00:00+0000',
+          end: '2018-10-06T09:00:00+0000',
+        });
+        const { body: shifts } = await api.get('');
+        expect(shifts.length).to.be.equal(4);
+      });
+    });
+
+    describe('check shift overlap', () => {
+      it('should not allow shift to be created within existing shift', async () => {
+        const { status } = await api.post('').send({
+          user_id: 1,
+          start: '2018-10-06T10:00:00+0000',
+          end: '2018-10-06T16:00:00+0000',
+        });
+        expect(status).to.be.equal(400);
+        const { body: shifts } = await api.get('');
+        expect(shifts.length).to.be.equal(3);
+      });
+
+      it('should not allow shift to be created that envelops existing shift', async () => {
+        const { status } = await api.post('').send({
+          user_id: 1,
+          start: '2018-10-06T08:00:00+0000',
+          end: '2018-10-06T18:00:00+0000',
+        });
+        expect(status).to.be.equal(400);
+        const { body: shifts } = await api.get('');
+        expect(shifts.length).to.be.equal(3);
+      });
+
+      it('should not allow shift to be created that starts before existing shift and ends between start and end of existing shift', async () => {
+        const { status } = await api.post('').send({
+          user_id: 1,
+          start: '2018-10-06T08:00:00+0000',
+          end: '2018-10-06T16:00:00+0000',
+        });
+        expect(status).to.be.equal(400);
+        const { body: shifts } = await api.get('');
+        expect(shifts.length).to.be.equal(3);
+      });
+
+      it('should not allow shift to be created that ends after existing shift and starts between start and end of existing shift', async () => {
+        const { status } = await api.post('').send({
+          user_id: 1,
+          start: '2018-10-06T10:00:00+0000',
+          end: '2018-10-06T18:00:00+0000',
+        });
+        expect(status).to.be.equal(400);
+        const { body: shifts } = await api.get('');
+        expect(shifts.length).to.be.equal(3);
+      });
     });
   });
 
@@ -91,9 +147,6 @@ describe('/shifts', () => {
     });
 
     it('should not allow updated_at to be manually updated', async () => {
-    });
-
-    it('should not allow shifts to overlap for the same user', async () => {
     });
   });
 

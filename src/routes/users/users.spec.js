@@ -14,6 +14,8 @@ describe('/users', () => {
   });
 
   describe('GET /', () => {
+    it('should list all users', async () => {
+    });
   });
 
   describe('GET /:id', () => {

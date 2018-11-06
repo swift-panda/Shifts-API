@@ -8,6 +8,16 @@ const listShifts = ({ userId, start, end }) => {
   return list;
 }
 
+const findConflictingShifts = ({ userId, start, end }) => knex('shifts')
+  .select('*')
+  .where('user_id', userId)
+  .andWhere(builder =>
+    builder.where('start', '>=', start).andWhere('end', '<=', end)
+    .orWhere(builder => builder.where('start', '<=', start).andWhere('end', '>=', end))
+    .orWhere(builder => builder.where('start', '>', start).andWhere('start', '<', end).andWhere('end', '>', start).andWhere('end', '>', end))
+    .orWhere(builder => builder.where('start', '<', start).andWhere('start', '<', end).andWhere('end', '>', start).andWhere('end', '<', end))
+  );
+
 const getShift = shiftId => knex('shifts')
   .select('*')
   .where({ id: shiftId })
@@ -28,6 +38,7 @@ const deleteShift = shiftId => knex('shifts')
 
 module.exports = {
   listShifts,
+  findConflictingShifts,
   getShift,
   createShift,
   updateShift,
