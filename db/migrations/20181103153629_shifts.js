@@ -6,8 +6,6 @@ exports.up = (knex, Promise) => {
 
     table.integer('user_id').notNullable().unsigned();
     table.foreign('user_id').references('id').inTable('users');
-
-    table.timestamps(true, true);
   });
 };
 
