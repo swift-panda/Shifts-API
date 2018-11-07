@@ -5,7 +5,7 @@ const router = new Router({
 
 const {
   listUsers,
-  getUsers,
+  getUser,
   createUser,
   updateUser,
   deleteUser

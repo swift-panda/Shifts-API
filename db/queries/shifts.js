@@ -8,7 +8,8 @@ const listShifts = ({ userId, start, end }) => {
   return list;
 }
 
-const findConflictingShifts = ({ userId, start, end }) => knex('shifts')
+const findConflictingShifts = ({ userId, start, end, shiftId }) => {
+  const conflicts = knex('shifts')
   .select('*')
   .where('user_id', userId)
   .andWhere(builder =>
@@ -17,11 +18,13 @@ const findConflictingShifts = ({ userId, start, end }) => knex('shifts')
     .orWhere(builder => builder.where('start', '>', start).andWhere('start', '<', end).andWhere('end', '>', start).andWhere('end', '>', end))
     .orWhere(builder => builder.where('start', '<', start).andWhere('start', '<', end).andWhere('end', '>', start).andWhere('end', '<', end))
   );
+  if (shiftId) conflicts.whereNot('id', shiftId);
+  return conflicts
+};
 
 const getShift = shiftId => knex('shifts')
-  .select('*')
-  .where({ id: shiftId })
-  .first();
+  .first('*')
+  .where({ id: shiftId });
 
 const createShift = shift => knex('shifts')
   .insert(shift)

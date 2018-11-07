@@ -18,7 +18,8 @@ router.get('/', async (ctx, next) => {
     const shifts = await listShifts({ start, end });
     ctx.body = shifts;
   } catch (err) {
-    // console.error(err);
+    ctx.status = 400;
+    ctx.body = { message: err.toString() };
   }
 });
 
@@ -47,10 +48,10 @@ router.post('/', async (ctx, next) => {
 
 router.patch('/:id', async (ctx, next) => {
   try {
-    const { start: originalStart, end: originalEnd } = fetchShift(ctx.params.id);
+    const { user_id, start: originalStart, end: originalEnd } = await fetchShift(ctx.params.id);
     // extract start and end, only they can be updated
-    const { user_id, start, end } = ctx.request.body;
-    await validateShift(user_id, start || originalStart, end || originalEnd);
+    const { start, end } = ctx.request.body;
+    await validateShift(user_id, start || originalStart, end || originalEnd, ctx.params.id);
     const shift = await updateShift(ctx.params.id, { start, end });
     ctx.body = shift;
   } catch (err) {
@@ -76,11 +77,12 @@ const fetchShift = async id => {
 }
 
 // function that checks if there is an overlapping shift
-const validateShift = async (userId, start, end) => {
-  const shifts = await findConflictingShifts({ userId, start, end });
+const validateShift = async (userId, start, end, shiftId) => {
+  if (start > end) throw new Error('Start cannot be greater than the end time');
+  const shifts = await findConflictingShifts({ userId, start, end, shiftId });
   if (shifts.length > 0) {
     const shiftIds = shifts.map(shift => shift.id).join(', ');
-    throw new Error(`Shift cannot be created, conflicts with the following ${shiftIds}`);
+    throw new Error(`Shift conflicts with the following ${shiftIds}`);
   }
 };
 
