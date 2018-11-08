@@ -8,8 +8,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "NODE_ENV=development node src/index.js",
-    "start:prod": "NODE_ENV=production node src/index.js",
+    "start": "node src/index.js",
     "start:test": "NODE_ENV=testing node src/index.js",
     "test": "NODE_ENV=testing mocha --recursive ./src/**/*.spec.js",
     "test:watch": "npm run test -- --watch",
@@ -29,7 +28,10 @@
     "knex": "^0.15.2",
     "koa": "^2.6.1",
     "koa-bodyparser": "^4.2.1",
+    "koa-passport": "^4.1.1",
     "koa-router": "^7.4.0",
+    "koa-session": "^5.10.0",
+    "passport-local": "^1.0.0",
     "pg": "^7.6.0"
   }
 }

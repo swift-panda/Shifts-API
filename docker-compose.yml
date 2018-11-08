@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+
+  db:
+    image: postgres:11
+    restart: always
+    ports:
+      - "5432:5432"
+    networks:
+      - shared_network
+    volumes:
+     - db_shifts:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: shifts
+      POSTGRES_PASSWORD: password
+
+  api:
+    build: .
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/shifts_api
+    networks:
+      - shared_network
+    depends_on:
+      - db
+    links:
+      - db
+    environment:
+      DB_CONNECTION_URI: postgresql://shifts:password@localhost:5432/shifts
+
+volumes:
+  db_shifts:
+
+networks:
+  shared_network:

@@ -65,8 +65,8 @@ router.delete('/:id', async (ctx, next) => {
     await deleteShift(ctx.params.id);
     ctx.body = { message: `Successfully deleted shift ${ctx.params.id}` };
   } catch (err) {
-    ctx.status = 404
-    ctx.body = { message: `Error: Shift ${ctx.params.id} not found` };
+    ctx.status = 404;
+    ctx.body = { message: `Shift ${ctx.params.id} not found` };
   }
 });
 

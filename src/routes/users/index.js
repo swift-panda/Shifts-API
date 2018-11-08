@@ -17,16 +17,19 @@ router.get('/', async (ctx, next) => {
     const users = await listUsers();
     ctx.body = users;
   } catch (err) {
-    console.error(err);
+    ctx.status = 400;
+    ctx.body = { message: err.toString() };
   }
 });
 
 router.get('/:id', async (ctx, next) => {
   try {
     const user = await getUser(ctx.params.id);
+    if (!user) throw new Error(`User ${ctx.params.id} not found`);
     ctx.body = user;
   } catch (err) {
-    console.error(err);
+    ctx.status = 404;
+    ctx.body = { message: err.toString() };
   }
 });
 
@@ -36,7 +39,8 @@ router.get('/:id/shifts', async (ctx, next) => {
     const shifts = await listShifts({ userId: ctx.params.id, start, end });
     ctx.body = shifts;
   } catch (err) {
-    console.error(err);
+    ctx.status = 400;
+    ctx.body = { message: err.toString() };
   }
 });
 
@@ -60,10 +64,11 @@ router.patch('/:id', async (ctx, next) => {
 
 router.delete('/:id', async (ctx, next) => {
   try {
-    deleteUser(ctx.params.id);
+    await deleteUser(ctx.params.id);
     ctx.body = { message: `successfully deleted user ${ctx.params.id}` };
   } catch (err) {
-    console.error(err);
+    ctx.status = 404;
+    ctx.body = { message: `Shift ${ctx.params.id} not found` };
   }
 });
 
