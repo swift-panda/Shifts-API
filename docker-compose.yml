@@ -29,6 +29,7 @@ services:
     links:
       - db
     environment:
+      NODE_ENV: production
       DB_CONNECTION_URI: postgresql://shifts:password@localhost:5432/shifts
 
 volumes:
